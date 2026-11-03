@@ -100,8 +100,42 @@ class LinkedList {
     result += "null";
     return result;
   }
+  // Extra Credit:
+  insertAt(index, ...values) {
+    let item = this.#head.nextNode;
+    if (index >= this.size() || index < 0)
+      throw new RangeError("Index out of bounds");
+    if (index === 0) {
+      values.toReversed().forEach((value) => this.prepend(value));
+    } else if (index === this.size() - 1) {
+      values.forEach((value) => this.append(value));
+    } else {
+      for (let i = 0; i < index - 1; i++) {
+        item = item.nextNode;
+      }
+      values.forEach((value) => {
+        let current = new Node(value);
+        current.nextNode = item.nextNode;
+        item.nextNode = current;
+        item = item.nextNode;
+      });
+    }
+  }
+  removeAt(index) {
+    let item = this.#head.nextNode;
+    if (index >= this.size() || index < 0)
+      throw new RangeError("Index out of bounds");
+    if (index === 0) {
+      this.pop();
+    } else {
+      for (let i = 0; i < index - 1; i++) {
+        item = item.nextNode;
+      }
+      item.nextNode = item.nextNode.nextNode;
+      if (item.nextNode === null) this.#tail.nextNode = item;
+    }
+  }
 }
-
 // example uses class syntax - adjust as necessary
 const list = new LinkedList();
 
@@ -112,3 +146,7 @@ list.append("hamster");
 list.append("snake");
 list.append("turtle");
 console.log(list.toString());
+list.removeAt(5);
+console.log(list.toString());
+list.removeAt(4);
+console.log(list.tail());
